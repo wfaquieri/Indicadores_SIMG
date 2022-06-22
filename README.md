@@ -56,15 +56,14 @@ Veja a seguir como a pasta está organizada e sua descrição. **Na pasta de 'in
 .
 ├─ Projeto.Rproj                                 (Arquivo para abrir e organizar o projeto)        
 ├─ main.R                                        (Script principal)            
-├─ src                                           
+├─ src                                           (Pasta com as dependências do projeto)
 │   └─ code/gerar_indicadores.R                  (Script que gera os indicadores)
 │   └─ Template.xlsx                             (Template em Excel do arquivo final)
-├─ input                                         (Pasta para armazenar os dados de entrada do projeto)
+├─ inputs                                        (Pasta para armazenar os dados de entrada do projeto)
 │   └─ 1-TODAS AS SOLICITAÇÕES...xlsx            (Deve conter a expressão 'TODAS AS SOLICITAÇÕES' + .xlsx)    
 │   └─ AAAA-MM-DD_mapeamento.csv                 (Deve conter a expressão 'mapeamento' + .csv) 
 │   └─ Planilha Carga 26 - SIS.xlsx              (Deve conter a expressão 'SIS' + .xlsx)   
-│   └─ manutenção...csv                          (Deve conter a expressão 'manutenção' + .csv)   
-│   └─ AAAA-MM-DD_AAAA-MM-DD_CARGA_SIMG_JOB.xlsx (Deve conter a expressão '_CARGA_SIMG_' + .xlsx) 
+│   └─ AAAA-MM-DD_CARGA_SIMG_JOB.xlsx            (Deve conter a expressão '_CARGA_SIMG_' + .xlsx) 
 └─ README.html                                   (Este manual)
 ```
 <br>
