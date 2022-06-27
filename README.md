@@ -64,6 +64,7 @@ Veja a seguir como a pasta está organizada e sua descrição. **Na pasta de 'in
 │   └─ AAAA-MM-DD_mapeamento.csv                 (Deve conter a expressão 'mapeamento' + .csv) 
 │   └─ Planilha Carga 26 - SIS.xlsx              (Deve conter a expressão 'SIS' + .xlsx)   
 │   └─ AAAA-MM-DD_CARGA_SIMG_JOB.xlsx            (Deve conter a expressão '_CARGA_SIMG_' + .xlsx) 
+├─ outputs                                       (Pasta para armazenar os dados de saída do projeto: resultados)
 └─ README.html                                   (Este manual)
 ```
 <br>
