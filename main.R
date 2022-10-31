@@ -3,13 +3,18 @@
 #' | IBRE - Instituto Brasileiro de Economia             |
 #' | Ibre-Sci-Sapr-Equipe de Mineração de Dados          |
 #' | Data inicial: 12/2021                               | 
-#' | Atualizado  : 06/2022                               |  
+#' | Atualizado  : 09/2022                               |  
 #' | Responsável : winicius.faquieri                     |
 #' '-----------------------------------------------------' 
 #'
 #'         
 #'
 #' (i) Atalho para executar script "Crtl + Alt + R"   
+#' 
+#' 
+#' 
+#' 
+#' 
 #' 
 #' 
 #' 
@@ -46,13 +51,13 @@
 
 
 
-# Limpando o ambiente 
+
 
 rm(list=ls()) 
 gc()
 
 
-# Bibliotecas:
+# Loading/Attaching and Listing of Packages:
 
 library(purrr)
 library(magrittr)
@@ -66,6 +71,6 @@ library(janitor)
 library(openxlsx)
 
 
-# Read R Code:
+# Read R Code from a File
 
 source('src/code/gerar_indicadores.R')
