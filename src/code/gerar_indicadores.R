@@ -1,6 +1,6 @@
 
 
-# Leitura da planilha de controle geral de solicitações'
+# Leitura da planilha de controle geral de solicitações' (antiga planilha todas as solicitações)
 
 drt = dir("inputs", full.names = T)
 
@@ -18,7 +18,6 @@ plan1 =
   dplyr::rename(descricao = descricao_solicitada)
 
 # Sempre filtrar o mês anterior:
-
 prev_date = floor_date(today(), "month") - months(1)
 
 plan1 = plan1 |>  
@@ -39,6 +38,7 @@ plan1 = plan1 |> mutate(
   grupos =
     case_when(
       str_detect(job, "SICRO|SCRO") | job == 'DNIT' ~ 'SICRO',
+      job == 'ESTV' ~ 'EST_vAREJO',
       job == 'SICFER' ~ 'SICFER',
       job == 'ECON_DNIT' ~ 'ECON_DNIT',
       str_detect(job, "INFRAES") ~ 'INFRAES',
@@ -50,7 +50,7 @@ plan1 = plan1 |> mutate(
       str_detect(job, "O-GRUPOS|M-OBRA|M-OBRAS|G-SERVIÇO|PORTOBRAS") ~ 'O-GRUPOS/M-OBRA/G-SERVIÇO/PORTOBRAS'
     )
 )
-  
+
 quant1 = plan1 |> group_by(grupos) |> summarise(n_obs = n()) |>  
   filter(grupos != 'NA')
 
@@ -84,10 +84,11 @@ plan2 = plan2 |>
 # Separando por grupos
 
 plan2 = plan2 |> mutate(
-  job = Job |>  toupper(),
+  job = Job |> toupper(),
   grupos = 
     case_when(
       str_detect(job, "SICRO|SCRO") | job == 'DNIT' ~ 'SICRO',
+      str_detect(job, "ESTV") ~ 'EST_VAREJO',
       job == 'SICFER' ~ 'SICFER',
       job == 'ECON_DNIT' ~ 'ECON_DNIT',
       str_detect(job, "INFRAES") ~ 'INFRAES',
@@ -100,10 +101,9 @@ plan2 = plan2 |> mutate(
     )
 )
 
-quant2 = plan2 |>  group_by(grupos) |>  summarise(n_cnpj = n_distinct(CNPJ)) |>  
+quant2 = plan2 |> group_by(grupos) |> 
+  summarise(n_cnpj = n_distinct(CNPJ)) |>  
   filter(grupos != 'NA')
-  
-
 
 
 
@@ -131,13 +131,14 @@ plan3 =
                  skip = 2,
                  col_types = 'text',
                  col_names = T,
-                 trim_ws = T)) |>  clean_names() |>  rename(job = 24)
+                 trim_ws = T)) |> clean_names() |> rename(job = 24)
 
 
 plan3 = plan3 |> mutate(
   grupos =
     case_when(
       str_detect(job, "SICRO") ~ 'SICRO',
+      str_detect(job, "ESTV") ~ 'EST_VAREJO',
       job == 'SICFER' ~ 'SICFER',
       job == 'ECON_DNIT' ~ 'ECON_DNIT',
       str_detect(job, "INFRAES") ~ 'INFRAES',
@@ -152,20 +153,36 @@ plan3 = plan3 |> mutate(
 
 
 # Parte 1
-quant4a = plan3 |>  group_by(grupos) |>  summarise(n_pos = n()) |>  na.omit()
+quant4a = plan3 |> group_by(grupos) |> summarise(n_pos = n()) |> na.omit()
+
+# Vetor para armazenar os resultados
+quant4 <- NULL
+
+# Verificar cada arquivo individualmente
+for (file in drt) {
+  # Verificar se o arquivo contém a string "SIS"
+  if (grepl("SIS", file)) {
+    plan4 <-
+      read_xlsx(
+        drt[str_detect(drt, "SIS")],
+        sheet = 1,
+        skip = 5,
+        col_names = T,
+        trim_ws = T
+      ) |>
+      janitor::clean_names() |>
+      mutate(grupos = 'O-GRUPOS/M-OBRA/G-SERVIÇO/PORTOBRAS')
+    
+    quant4b = plan4 |> group_by(grupos) |> summarise(n_pos = n())
+    
+    # Combinar resultados
+    quant4 <- bind_rows(quant4, quant4a, quant4b)
+  } else {
+    quant4 <- quant4a
+  }
+}
 
 
-plan4 <- 
-  read_xlsx(drt[str_detect(drt, "SIS")],
-            sheet =1,
-            skip = 5,
-            col_names = T,
-            trim_ws = T) |> janitor::clean_names() |>  
-  mutate(grupos = 'O-GRUPOS/M-OBRA/G-SERVIÇO/PORTOBRAS')
-
-quant4b = plan4 |> group_by(grupos) |> summarise(n_pos = n())
-
-quant4 = bind_rows(quant4a,quant4b)
 rm(quant4a,quant4b)
 
 
@@ -174,6 +191,7 @@ rm(quant4a,quant4b)
 tab_ind = tibble(
   Jobs = c(
     'SICRO',
+    'EST_VAREJO',
     'SABESP',
     'SICFER',
     'ECON_DNIT',
@@ -227,14 +245,14 @@ dataref = paste0(
 
 # rm(wb)
 wb <- loadWorkbook("src/Template.xlsx")
-wb |>  writeData(
+wb |> writeData(
   sheet = 1,
   dataref,
   startCol = 1,
   startRow = 1,
   colNames = F
 )
-wb |>  writeData(
+wb |> writeData(
   sheet = 1,
   tab_ind,
   startCol = 1,
@@ -252,7 +270,7 @@ mergeCells(wb,
            sheet = 1,
            cols = 1:10,
            rows = 1)
-wb |>  saveWorkbook(paste0("outputs/", Sys.Date(), "_INDICADORES_SIMG.xlsx"),
+wb |> saveWorkbook(paste0("outputs/", Sys.Date(), "_INDICADORES_SIMG.xlsx"),
                     overwrite = T)
 
 rm(list=ls())

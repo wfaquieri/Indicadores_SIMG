@@ -3,15 +3,15 @@
 #' | IBRE - Instituto Brasileiro de Economia             |
 #' | Ibre-Sci-Sapr-Equipe de Mineração de Dados          |
 #' | Data inicial: 12/2021                               | 
-#' | Atualizado  : 09/2022                               |  
+#' | Atualizado  : 05/2023                               |  
 #' | Responsável : winicius.faquieri                     |
 #' '-----------------------------------------------------' 
 #'
 #'         
 #'
-#' (i) Atalho para executar script "Crtl + Alt + R"   
+#' (i) Run All! -> ** "Ctrl + Alt + R" ** <-
 #' 
-#' 
+#' Tempo estimado < 5 sec.
 #' 
 #' 
 #' 
